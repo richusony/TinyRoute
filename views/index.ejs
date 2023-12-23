@@ -4,7 +4,12 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Tiny Route</title>
-   <link rel="icon" type="image/png" sizes="32x32" href="/assets/images/Group 2.png">
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="/assets/images/Group 2.png"
+    />
     <script src="https://cdn.tailwindcss.com"></script>
     <script
       src="https://kit.fontawesome.com/70218ce737.js"
@@ -62,10 +67,21 @@
         <div
           id="output"
           class="hidden bg-[#232D3F] text-center text-white rounded-lg py-2 px-3"
-        ><span id="shortUrl" class="hidden"></span></div>
-        <button id="copyButton" class="hidden mx-2 px-3 py-2 bg-[#232D3F] hover:bg-[#2e394e] text-white rounded-lg">Copy</button>
+        >
+          <span id="shortUrl" class="hidden"></span>
+        </div>
+        <button
+          id="copyButton"
+          class="hidden mx-2 px-3 py-2 bg-[#232D3F] hover:bg-[#2e394e] text-white rounded-lg"
+        >
+          Copy
+        </button>
       </div>
     </section>
+
+    <footer class="text-center text-white font-semibold bottom-1">
+      <span>Richu Sony 2023 &#169;</span>
+    </footer>
     <script>
       const toast = document.getElementById("toast");
       const toastText = document.getElementById("toastText");
@@ -110,11 +126,10 @@
             console.log(data);
             const shortUrl = document.getElementById("shortUrl");
             const copyButton = document.getElementById("copyButton");
-            shortUrl.innerText= `${data.shortUrl}`;
+            shortUrl.innerText = `${data.shortUrl}`;
             output.innerHTML = `<a href="${data.shortUrl}">${data.shortUrl}</a>`;
             output.classList.remove("hidden");
-            copyButton.classList.remove('hidden');
-
+            copyButton.classList.remove("hidden");
           }
         }
       }
