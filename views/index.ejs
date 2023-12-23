@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tiny Route</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script
+      src="https://kit.fontawesome.com/70218ce737.js"
+      crossorigin="anonymous"
+    ></script>
+  </head>
+  <body
+    class="overflow-x-hidden h-screen bg-[url('https://images.pexels.com/photos/1323550/pexels-photo-1323550.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2')] bg-cover bg-no-repeat"
+  >
+    <nav class="px-5 mt-5">
+      <div class="w-12">
+        <img
+          class="w-full h-full cursor-pointer"
+          src="../assets/images/Group 2.png"
+          alt="logo"
+        />
+      </div>
+    </nav>
+
+    <div
+      id="toast"
+      class="transition delay-150 ease-linear -translate-x-full opacity-0 text-center"
+    >
+      <span
+        id="toastText"
+        class="bg-[#161A30] text-white py-3 px-3 rounded-xl text-xl"
+      >
+      </span>
+    </div>
+
+    <section class="px-5 py-3 mt-20 flex flex-col justify-center items-center">
+      <h3
+        class="text-white text-xl my-5 md:w-1/2 text-center md:font-semibold bg-[rgba(0,0,0,0.03)]"
+      >
+        With TinyRoute, users can swiftly generate shortened URLs, making
+        sharing and distributing links across various platforms effortless.
+      </h3>
+      <div class="text-center my-auto w-full">
+        <form class="md:w-1/2 mx-auto flex">
+          <input
+            id="originalUrl"
+            class="w-full px-2 py-4 rounded-l-xl text-xl"
+            type="text"
+            placeholder="paste the link or url"
+          />
+          <button
+            onclick="handleSubmit(event)"
+            class="py-4 px-4 bg-[#161A30] text-white rounded-r-full text-xl"
+          >
+            Create
+          </button>
+        </form>
+      </div>
+      <div class="mt-5 flex">
+        <div
+          id="output"
+          class="hidden bg-[#232D3F] text-center text-white rounded-lg py-2 px-3"
+        ><span id="shortUrl" class="hidden"></span></div>
+        <button id="copyButton" class="hidden mx-2 px-3 py-2 bg-[#232D3F] hover:bg-[#2e394e] text-white rounded-lg">Copy</button>
+      </div>
+    </section>
+    <script>
+      const toast = document.getElementById("toast");
+      const toastText = document.getElementById("toastText");
+      const output = document.getElementById("output");
+
+      async function handleSubmit(event) {
+        event.preventDefault();
+        const originalUrl = document.getElementById("originalUrl");
+
+        if (originalUrl.value == "" || undefined || null) {
+          toast.classList.remove("-translate-x-full");
+          toast.classList.remove("opacity-0");
+          toastText.innerHTML = `<i class="fa-solid fa-triangle-exclamation"></i> Paste your URL or Link before creating`;
+          setTimeout(() => {
+            toast.classList.add("-translate-x-full");
+            toast.classList.add("opacity-0");
+          }, [3000]);
+          return;
+        } else {
+          const url = { url: originalUrl.value };
+          const reqData = JSON.stringify(url);
+          const res = await fetch("/shorten", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: reqData,
+          });
+
+          const data = await res.json();
+          if (res.status == 400) {
+            toast.classList.remove("-translate-x-full");
+            toast.classList.remove("opacity-0");
+            toastText.innerHTML = `<i class="fa-solid fa-triangle-exclamation"></i> Something went wrong`;
+            setTimeout(() => {
+              toast.classList.add("-translate-x-full");
+              toast.classList.add("opacity-0");
+            }, [3000]);
+            return;
+          }
+          if (res.ok) {
+            console.log(data);
+            const shortUrl = document.getElementById("shortUrl");
+            const copyButton = document.getElementById("copyButton");
+            shortUrl.innerText= `${data.shortUrl}`;
+            output.innerHTML = `<a href="${data.shortUrl}">${data.shortUrl}</a>`;
+            output.classList.remove("hidden");
+            copyButton.classList.remove('hidden');
+
+          }
+        }
+      }
+
+      // Get the referral code and copy button elements
+      const shortUrl = document.getElementById("shortUrl");
+      const copyButton = document.getElementById("copyButton");
+
+      // Add click event listener to the copy button
+      copyButton.addEventListener("click", () => {
+        // Create a textarea element to temporarily hold the referral code
+        const textarea = document.createElement("textarea");
+        textarea.value = shortUrl.textContent.trim(); // Set the referral code as the textarea value
+        document.body.appendChild(textarea); // Append the textarea to the DOM
+
+        // Select and copy the referral code from the textarea
+        textarea.select();
+        document.execCommand("copy");
+
+        // Remove the textarea from the DOM
+        document.body.removeChild(textarea);
+
+        // Provide a visual indication or feedback that the code has been copied (optional)
+        copyButton.textContent = "Copied!";
+        setTimeout(() => {
+          copyButton.textContent = "Copy";
+        }, 3000); // Reset the button text after 1.5 seconds
+      });
+    </script>
+  </body>
+</html>

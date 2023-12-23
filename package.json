@@ -4,7 +4,9 @@
   "description": "\"TinyRoute\" is a streamlined URL shortening service designed to simplify lengthy web addresses into concise, manageable links. With TinyRoute, users can swiftly generate shortened URLs, making sharing and distributing links across various platforms effortless. Offering a seamless experience, TinyRoute prioritizes speed, reliability, and ease of use, ensuring that navigating the web becomes more efficient and user-friendly.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon node index",
+    "style": "npx tailwindcss -i ./public/css/input.css -o ./public/css/output.css --watch"
   },
   "repository": {
     "type": "git",
@@ -15,5 +17,16 @@
   "bugs": {
     "url": "https://github.com/richusony/TinyRoute/issues"
   },
-  "homepage": "https://github.com/richusony/TinyRoute#readme"
+  "homepage": "https://github.com/richusony/TinyRoute#readme",
+  "dependencies": {
+    "dotenv": "^16.3.1",
+    "ejs": "^3.1.9",
+    "express": "^4.18.2",
+    "mongoose": "^8.0.3",
+    "nodemon": "^3.0.2",
+    "shortid": "^2.2.16"
+  },
+  "devDependencies": {
+    "tailwindcss": "^3.4.0"
+  }
 }
