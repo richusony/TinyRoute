@@ -1,7 +1,3 @@
-Absolutely, here's how you can structure the README for GitHub:
-
----
-
 # TinyRoute
 
 TinyRoute is a lightweight URL shortening service built with Node.js and Express.
