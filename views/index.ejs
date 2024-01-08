@@ -69,7 +69,10 @@
           class="hidden bg-[#232D3F] text-center text-white rounded-lg py-2 px-3"
         >
           <span id="shortUrl" class="hidden"></span>
-          <span id="loader" class="py-2 px-3 bg-[#232D3F] text-center text-white rounded-lg"></span>
+          <span
+            id="loader"
+            class="py-2 px-3 bg-[#232D3F] text-center text-white rounded-lg"
+          ></span>
         </div>
         <button
           id="copyButton"
@@ -89,6 +92,20 @@
       const output = document.getElementById("output");
       const loader = document.getElementById("loader");
 
+      function isValidUrl(url) {
+        // Regular expression pattern for URL validation
+        const urlPattern = new RegExp(
+          "^(https?:\\/\\/)?" + // protocol
+            "((([a-zA-Z\\d]([a-zA-Z\\d-]{0,61}[a-zA-Z\\d])?)\\.)+[a-zA-Z]{2,}|" + // domain name
+            "((\\d{1,3}\\.){3}\\d{1,3}))" + // OR ip (v4) address
+            "(\\:\\d+)?(\\/[-a-zA-Z\\d%_.~+]*)*" + // port and path
+            "(\\?[;&a-zA-Z\\d%_.~+=-]*)?" + // query string
+            "(\\#[-a-zA-Z\\d_]*)?$" // fragment locator
+        );
+
+        return urlPattern.test(url);
+      }
+
       async function handleSubmit(event) {
         event.preventDefault();
         const originalUrl = document.getElementById("originalUrl");
@@ -97,6 +114,25 @@
           toast.classList.remove("-translate-x-full");
           toast.classList.remove("opacity-0");
           toastText.innerHTML = `<i class="fa-solid fa-triangle-exclamation"></i> Paste your URL or Link before creating`;
+          setTimeout(() => {
+            toast.classList.add("-translate-x-full");
+            toast.classList.add("opacity-0");
+          }, [3000]);
+          return;
+        }else if(!isValidUrl(originalUrl.value)){
+          toast.classList.remove("-translate-x-full");
+          toast.classList.remove("opacity-0");
+          toastText.innerHTML = `<i class="fa-solid fa-triangle-exclamation"></i> Please enter a valid URL`;
+          setTimeout(() => {
+            toast.classList.add("-translate-x-full");
+            toast.classList.add("opacity-0");
+          }, [3000]);
+          return;
+        }
+       else if (originalUrl.value.length <= 30) {
+          toast.classList.remove("-translate-x-full");
+          toast.classList.remove("opacity-0");
+          toastText.innerHTML = `<i class="fa-solid fa-triangle-exclamation"></i> Are you blind😒, This URL is already shorter`;
           setTimeout(() => {
             toast.classList.add("-translate-x-full");
             toast.classList.add("opacity-0");
@@ -112,13 +148,13 @@
             },
             body: reqData,
           });
-          loader.classList.remove('hidden');
-          loader.innerHTML=`<img class="w-full h-full" src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fshortpixel.com%2Fimg%2Fspinner2.gif&f=1&nofb=1&ipt=02e2ef473b3e78f490519d672b3e004b21f7a7f2918a1de7b82869954f7c80fe&ipo=images" />`
+          loader.classList.remove("hidden");
+          loader.innerHTML = `<img class="w-full h-full" src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fshortpixel.com%2Fimg%2Fspinner2.gif&f=1&nofb=1&ipt=02e2ef473b3e78f490519d672b3e004b21f7a7f2918a1de7b82869954f7c80fe&ipo=images" />`;
 
           const data = await res.json();
 
           if (res.status == 400) {
-          loader.classList.add('hidden');
+            loader.classList.add("hidden");
             toast.classList.remove("-translate-x-full");
             toast.classList.remove("opacity-0");
             toastText.innerHTML = `<i class="fa-solid fa-triangle-exclamation"></i> Something went wrong`;
@@ -129,7 +165,7 @@
             return;
           }
           if (res.ok) {
-          loader.classList.add('hidden');
+            loader.classList.add("hidden");
             console.log(data);
             const shortUrl = document.getElementById("shortUrl");
             const copyButton = document.getElementById("copyButton");
