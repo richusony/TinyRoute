@@ -29,7 +29,12 @@ app.get("/", (req, res) => {
 // Handle POST request to shorten URLs
 app.post("/shorten", async (req, res) => {
   const originalUrl = req.body.url;
-  console.log(originalUrl);
+
+  const existUrl = await urlModel.findOne({originalUrl:originalUrl.trim()});
+  if(existUrl){
+  const shortUrl = existUrl.shortId
+  return res.status(200).json({ originalUrl, shortUrl });
+  }
   const shortUrl = generateShortUrl(); // Implement your short URL generation logic here
 
   if (shortUrl != "" || shortUrl != undefined || shortUrl != null) {
